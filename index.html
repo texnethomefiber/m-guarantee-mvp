@@ -2,12 +2,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>M-Guarantee MVP</title>
+  <title>M-Guarantee – Complete MVP</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/@tailwindcss/forms"></script>
 </head>
 <body class="bg-gray-100 text-gray-800">
-  <div class="min-h-screen flex items-center justify-center px-4">
+  <div class="min-h-screen flex flex-col items-center justify-center px-4 py-8">
     <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-sm">
       <h1 class="text-2xl font-bold mb-2 text-center">M-Guarantee</h1>
       <p class="mb-4 text-center text-sm text-gray-600">Micro-loans backed by your trusted contacts</p><div id="step1">
@@ -23,13 +22,30 @@
     <input id="guarantor2" type="tel" class="w-full mb-2 p-2 border rounded" placeholder="Phone number 2 (optional)" />
     <input id="guarantor3" type="tel" class="w-full mb-4 p-2 border rounded" placeholder="Phone number 3 (optional)" />
 
-    <button onclick="submitForm()" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Request Loan</button>
+    <button onclick="simulateGuarantorPrompt()" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Send Request</button>
+  </div>
+
+  <div id="step3" class="hidden text-sm">
+    <p class="text-green-700 font-semibold text-center mb-2">Guarantors have been notified.</p>
+    <p class="mb-2">Waiting for guarantor responses:</p>
+    <ul class="mb-4 list-disc list-inside text-gray-600">
+      <li id="g1-status">Guarantor 1: Awaiting Response</li>
+      <li id="g2-status">Guarantor 2: Awaiting Response</li>
+      <li id="g3-status">Guarantor 3: Awaiting Response</li>
+    </ul>
+    <button onclick="showLoanResult()" class="w-full bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600">Simulate Decision</button>
   </div>
 
   <div id="confirmation" class="hidden text-center">
-    <p class="text-green-700 font-semibold">Loan request sent!</p>
-    <p class="text-sm mt-2 text-gray-500">Your guarantors have been notified via SMS/USSD. You will be updated shortly.</p>
+    <p class="text-green-700 font-semibold text-lg">✅ Loan Approved!</p>
+    <p class="text-sm mt-2 text-gray-600">KES <span id="loanAmountConfirm"></span> will be sent to your M-PESA account shortly.</p>
     <button onclick="resetForm()" class="mt-4 text-blue-500 underline">Start Over</button>
+  </div>
+
+  <div id="rejected" class="hidden text-center">
+    <p class="text-red-600 font-semibold text-lg">❌ Loan Rejected</p>
+    <p class="text-sm mt-2 text-gray-600">Not enough guarantors approved your request.</p>
+    <button onclick="resetForm()" class="mt-4 text-blue-500 underline">Try Again</button>
   </div>
 </div>
 
@@ -44,14 +60,29 @@
       document.getElementById('step2').classList.remove('hidden');
     }
 
-    function submitForm() {
+    function simulateGuarantorPrompt() {
       const g1 = document.getElementById('guarantor1').value;
       if (!g1) {
         alert("At least one guarantor is required");
         return;
       }
       document.getElementById('step2').classList.add('hidden');
-      document.getElementById('confirmation').classList.remove('hidden');
+      document.getElementById('step3').classList.remove('hidden');
+
+      setTimeout(() => document.getElementById('g1-status').innerText = "Guarantor 1: ✅ Approved", 2000);
+      setTimeout(() => document.getElementById('g2-status').innerText = "Guarantor 2: ❌ Rejected", 2500);
+      setTimeout(() => document.getElementById('g3-status').innerText = "Guarantor 3: ✅ Approved", 3000);
+    }
+
+    function showLoanResult() {
+      const amount = document.getElementById('loanAmount').value;
+      document.getElementById('step3').classList.add('hidden');
+      if (Math.random() > 0.3) {
+        document.getElementById('loanAmountConfirm').textContent = amount;
+        document.getElementById('confirmation').classList.remove('hidden');
+      } else {
+        document.getElementById('rejected').classList.remove('hidden');
+      }
     }
 
     function resetForm() {
@@ -59,8 +90,13 @@
       document.getElementById('guarantor1').value = '';
       document.getElementById('guarantor2').value = '';
       document.getElementById('guarantor3').value = '';
+      document.getElementById('g1-status').textContent = "Guarantor 1: Awaiting Response";
+      document.getElementById('g2-status').textContent = "Guarantor 2: Awaiting Response";
+      document.getElementById('g3-status').textContent = "Guarantor 3: Awaiting Response";
       document.getElementById('confirmation').classList.add('hidden');
+      document.getElementById('rejected').classList.add('hidden');
+      document.getElementById('step3').classList.add('hidden');
       document.getElementById('step1').classList.remove('hidden');
     }
   </script></body>
-</html>
+        </html>
