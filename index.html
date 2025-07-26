@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>M-Guarantee MVP</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://unpkg.com/@tailwindcss/forms"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <div class="min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-sm">
+      <h1 class="text-2xl font-bold mb-2 text-center">M-Guarantee</h1>
+      <p class="mb-4 text-center text-sm text-gray-600">Micro-loans backed by your trusted contacts</p><div id="step1">
+    <label class="block mb-2 font-semibold">Loan Amount (KES)</label>
+    <input id="loanAmount" type="number" min="100" max="5000" class="w-full mb-4 p-2 border rounded" placeholder="e.g. 500" required />
+
+    <button onclick="nextStep()" class="w-full bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Next</button>
+  </div>
+
+  <div id="step2" class="hidden">
+    <label class="block mb-2 font-semibold">Guarantor Phone Numbers</label>
+    <input id="guarantor1" type="tel" class="w-full mb-2 p-2 border rounded" placeholder="Phone number 1" required />
+    <input id="guarantor2" type="tel" class="w-full mb-2 p-2 border rounded" placeholder="Phone number 2 (optional)" />
+    <input id="guarantor3" type="tel" class="w-full mb-4 p-2 border rounded" placeholder="Phone number 3 (optional)" />
+
+    <button onclick="submitForm()" class="w-full bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Request Loan</button>
+  </div>
+
+  <div id="confirmation" class="hidden text-center">
+    <p class="text-green-700 font-semibold">Loan request sent!</p>
+    <p class="text-sm mt-2 text-gray-500">Your guarantors have been notified via SMS/USSD. You will be updated shortly.</p>
+    <button onclick="resetForm()" class="mt-4 text-blue-500 underline">Start Over</button>
+  </div>
+</div>
+
+  </div>  <script>
+    function nextStep() {
+      const amount = document.getElementById('loanAmount').value;
+      if (!amount || amount < 100 || amount > 5000) {
+        alert("Enter a valid amount between 100 and 5000");
+        return;
+      }
+      document.getElementById('step1').classList.add('hidden');
+      document.getElementById('step2').classList.remove('hidden');
+    }
+
+    function submitForm() {
+      const g1 = document.getElementById('guarantor1').value;
+      if (!g1) {
+        alert("At least one guarantor is required");
+        return;
+      }
+      document.getElementById('step2').classList.add('hidden');
+      document.getElementById('confirmation').classList.remove('hidden');
+    }
+
+    function resetForm() {
+      document.getElementById('loanAmount').value = '';
+      document.getElementById('guarantor1').value = '';
+      document.getElementById('guarantor2').value = '';
+      document.getElementById('guarantor3').value = '';
+      document.getElementById('confirmation').classList.add('hidden');
+      document.getElementById('step1').classList.remove('hidden');
+    }
+  </script></body>
+</html>
